@@ -3,6 +3,7 @@ import cors from 'cors';
 import 'dotenv/config';
 import { connectDB } from './config/db.js';
 import projectRoutes from './routes/projectRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,8 +15,9 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// R  outes
 app.use('/api/projects', projectRoutes);
+app.use('/api/contacts', contactRoutes);
 
 // Health Check Route
 app.get('/', (req, res) => {

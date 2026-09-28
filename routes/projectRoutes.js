@@ -1,5 +1,6 @@
 import express from 'express';
 import Project from '../models/Projects.js';
+import { sendRouteError } from '../utils/routeError.js';
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ router.get('/', async (req, res) => {
     const projects = await Project.find().sort({ createdAt: -1 });
     res.status(200).json(projects);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch projects', error: error.message });
+    sendRouteError(error, res, 'Failed to fetch projects.');
   }
 });
 
@@ -22,7 +23,7 @@ router.get('/:id', async (req, res) => {
     }
     res.status(200).json(project);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch project', error: error.message });
+    sendRouteError(error, res, 'Failed to fetch project.');
   }
 });
 
@@ -32,7 +33,7 @@ router.post('/', async (req, res) => {
     const newProject = await Project.create(req.body);
     res.status(201).json(newProject);
   } catch (error) {
-    res.status(400).json({ message: 'Invalid project data', error: error.message });
+    sendRouteError(error, res, 'Failed to create project.');
   }
 });
 
@@ -45,7 +46,7 @@ router.put('/:id', async (req, res) => {
     } 
     res.status(200).json(updatedProject);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to update project', error: error.message });
+    sendRouteError(error, res, 'Failed to update project.');
   }
 });
 
@@ -58,7 +59,7 @@ router.delete('/:id', async (req, res) => {
     }
     res.status(200).json({ message: 'Project deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to delete project', error: error.message });
+    sendRouteError(error, res, 'Failed to delete project.');
   }
 });
 

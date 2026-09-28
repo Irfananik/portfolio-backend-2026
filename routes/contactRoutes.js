@@ -1,5 +1,6 @@
 import express from 'express';
 import Contact from '../models/Contact.js';
+import { sendRouteError } from '../utils/routeError.js';
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ router.get('/', async (req, res) => {
     const contacts = await Contact.find().sort({ createdAt: -1 });
     res.status(200).json(contacts);
     } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch contacts', error: error.message });
+      sendRouteError(error, res, 'Failed to fetch contacts.');
   }
 });
 
@@ -22,7 +23,7 @@ router.get('/:id', async (req, res) => {
     }
     res.status(200).json(contact);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch contact', error: error.message });
+    sendRouteError(error, res, 'Failed to fetch contact.');
   }
 });
 
@@ -32,7 +33,7 @@ router.post('/', async (req, res) => {
     const newContact = await Contact.create(req.body);
     res.status(201).json(newContact);
   } catch (error) {
-    res.status(400).json({ message: 'Invalid contact data', error: error.message });
+    sendRouteError(error, res, 'Failed to create contact.');
   }
 });
 
@@ -45,7 +46,7 @@ router.put('/:id', async (req, res) => {
     }
     res.status(200).json(updatedContact);
     } catch (error) {   
-    res.status(500).json({ message: 'Failed to update contact', error: error.message });
+      sendRouteError(error, res, 'Failed to update contact.');
     }
 });
 
@@ -58,7 +59,7 @@ router.delete('/:id', async (req, res) => {
     }
     res.status(200).json({ message: 'Contact deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to delete contact', error: error.message });
+    sendRouteError(error, res, 'Failed to delete contact.');
   }
 });
 

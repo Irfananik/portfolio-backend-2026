@@ -1,66 +1,28 @@
 import express from 'express';
-import Project from '../models/Projects.js';
-import { sendRouteError } from '../utils/routeError.js';
+import { protect } from '../middleware/authMiddleware.js';
+import {
+  getProjects,
+  getProject,
+  createProject,
+  updateProject,
+  deleteProject,
+} from '../controllers/projectController.js';
 
 const router = express.Router();
 
 // GET all projects
-router.get('/', async (req, res) => {
-  try {
-    const projects = await Project.find().sort({ createdAt: -1 });
-    res.status(200).json(projects);
-  } catch (error) {
-    sendRouteError(error, res, 'Failed to fetch projects.');
-  }
-});
+router.get('/', getProjects);
 
 // GET a single project by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const project = await Project.findById(req.params.id);
-    if (!project) {
-      return res.status(404).json({ message: 'Project not found' });
-    }
-    res.status(200).json(project);
-  } catch (error) {
-    sendRouteError(error, res, 'Failed to fetch project.');
-  }
-});
+router.get('/:id', getProject);
 
 // POST a new project
-router.post('/', async (req, res) => {
-  try {
-    const newProject = await Project.create(req.body);
-    res.status(201).json(newProject);
-  } catch (error) {
-    sendRouteError(error, res, 'Failed to create project.');
-  }
-});
+router.post('/', protect, createProject);
 
 // PUT update a project by ID
-router.put('/:id', async (req, res) => {
-  try {
-    const updatedProject = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedProject) {
-      return res.status(404).json({ message: 'Project not found' });
-    } 
-    res.status(200).json(updatedProject);
-  } catch (error) {
-    sendRouteError(error, res, 'Failed to update project.');
-  }
-});
+router.put('/:id', protect, updateProject);
 
 // DELETE a project by ID
-router.delete('/:id', async (req, res) => {
-  try {
-    const deletedProject = await Project.findByIdAndDelete(req.params.id);
-    if (!deletedProject) {
-      return res.status(404).json({ message: 'Project not found' });
-    }
-    res.status(200).json({ message: 'Project deleted successfully' });
-  } catch (error) {
-    sendRouteError(error, res, 'Failed to delete project.');
-  }
-});
+router.delete('/:id', protect, deleteProject);
 
 export default router;

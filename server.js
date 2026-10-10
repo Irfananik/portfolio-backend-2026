@@ -9,7 +9,7 @@ import experienceRoutes from './routes/experienceRoutes.js';
 import educationRoutes from './routes/educationRoutes.js';
 
 import { protect } from './middleware/authMiddleware.js';
-import { loginUser } from './controllers/authController.js';
+import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -48,7 +48,7 @@ app.use('/api/contacts', contactRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/experiences', experienceRoutes);
 app.use('/api/education', educationRoutes);
-app.use('/api/auth', loginUser);
+app.use('/api/auth', authRoutes);
 
 // Health Check Route
 app.get('/', (req, res) => {

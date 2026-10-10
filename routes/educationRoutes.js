@@ -1,55 +1,25 @@
 import express from 'express';
-import Education from '../models/Education.js';
+import { protect } from '../middleware/authMiddleware.js';
+
+import
+{ getAllEducation, 
+  getEducationById, 
+  createEducation, 
+  updateEducation, 
+  deleteEducation }
+  from '../controllers/educationController.js';
 
 const router = express.Router();
 
 // GET all education & training records
-router.get('/', async (req, res, next) => {
-  try {
-    const education = await Education.find().sort({ createdAt: -1 });
-    res.status(200).json({ success: true, count: education.length, data: education });
-  } catch (error) {
-    next(error);
-  }
-});
-
+router.get('/', getAllEducation);
+// GET a single education / training record by ID
+router.get('/:id', getEducationById);
 // POST a new education / training record
-router.post('/', async (req, res, next) => {
-  try {
-    const data = Array.isArray(req.body) 
-      ? await Education.insertMany(req.body) 
-      : await Education.create(req.body);
-      
-    res.status(201).json({ success: true, data });
-  } catch (error) {
-    next(error);
-  }
-});
-
+router.post('/', protect, createEducation);
 // PUT (update) an education / training record by ID
-router.put('/:id', async (req, res, next) => {
-  try {
-    const record = await Education.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!record) {
-      return res.status(404).json({ success: false, message: 'Education record not found' });
-    }
-    res.status(200).json({ success: true, data: record });
-  } catch (error) {
-    next(error);
-  }
-});
-
+router.put('/:id', protect, updateEducation);
 // DELETE an education / training record by ID
-router.delete('/:id', async (req, res, next) => {
-  try {
-    const record = await Education.findByIdAndDelete(req.params.id);
-    if (!record) {
-      return res.status(404).json({ success: false, message: 'Education record not found' });
-    }
-    res.status(200).json({ success: true, message: 'Education record deleted successfully' });
-  } catch (error) {
-    next(error);
-  }
-});
+router.delete('/:id', protect, deleteEducation);
 
 export default router;

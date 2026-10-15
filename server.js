@@ -7,6 +7,7 @@ import contactRoutes from './routes/contactRoutes.js';
 import skillRoutes from './routes/skillRoutes.js';
 import experienceRoutes from './routes/experienceRoutes.js';
 import educationRoutes from './routes/educationRoutes.js';
+import settingRoutes from './routes/settingRoutes.js';
 
 import { protect } from './middleware/authMiddleware.js';
 import authRoutes from './routes/authRoutes.js';
@@ -49,6 +50,7 @@ app.use('/api/skills', skillRoutes);
 app.use('/api/experiences', experienceRoutes);
 app.use('/api/education', educationRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/settings', settingRoutes);
 
 // Health Check Route
 app.get('/', (req, res) => {
